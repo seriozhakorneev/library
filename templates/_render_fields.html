@@ -1,0 +1,21 @@
+<!--обычное поле-->
+{% macro render_field(field) %}
+	<div class="input-group">
+	{{ field(class_="form-control",**kwargs)|safe }}
+	</div>
+	{% for error in field.errors %}
+	<span style="color:red;">{{ error }}</span>
+	{% endfor %}
+{% endmacro %}
+
+<!--поиск поле-->
+{% macro render_search_field(field) %}
+	{{ field(class_="form-control mr-sm-2",**kwargs)|safe }}
+{% endmacro %}
+
+<!--мультиселект поле-->
+{% macro render_selectmultiple_field(field) %}
+	<div class="input-group">
+	{{ field(size="25", class_="form-control",**kwargs)|safe }}
+	</div>
+{% endmacro %}

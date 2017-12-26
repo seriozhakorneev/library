@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% block title %}Регистрация{% endblock %}
+{% from '_render_fields.html' import render_field %}
+
+{% block menu %}
+<div class="collapse navbar-collapse" id="navbarResponsive">
+<ul class="nav navbar-nav ml-auto">
+<li class="nav-item">
+<a class="nav-link" href="{{ url_for('books') }}">Книги</a>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="{{ url_for('authors') }}">Авторы</a>
+</li>
+</ul>
+</div>
+{% endblock %}
+
+{% block table %}
+<div class="row">
+
+<!--пустая колонка для позиционирования-->
+<div class="col-lg-4"></div>
+
+<div class="col-lg-4">
+<div class="card mb-3">
+<h3 class="card-header">Регистрация</h3>
+<div class="card-body">
+<form method="POST" action="{{ url_for('sign_up') }}">
+<fieldset>
+
+<!-- Flash messages -->
+<div>
+{% with messages = get_flashed_messages(with_categories=True) %}
+{% if messages %}
+{% for category, message in messages %}
+<p class="{{ category }}">{{ message }}</p>
+{% endfor %}
+{% endif %}
+{% endwith %}
+</div>
+
+
+<div class="form-group">
+<label>Имя</label>
+{{ reader_signup_form.csrf_token }}
+{{ render_field(reader_signup_form.username,placeholder=reader_signup_form.username.label.text) }}
+</div>
+<div class="form-group">
+<label>Пароль</label>
+{{ render_field(reader_signup_form.password,placeholder=reader_signup_form.password.label.text) }}
+</div>
+<div class="form-group">
+<label>Подтвердить пароль</label>
+{{ render_field(reader_signup_form.confirm_password,placeholder=reader_signup_form.confirm_password.label.text) }}
+</div>
+<button style="cursor:pointer" type="submit" class="btn btn-primary">Отправить</button>
+</fieldset>
+</form>
+</div>
+</div>
+</div>
+</div>
+
+<!--модальное окно войти-->
+<div class="modal fade" id="ModalSign_In" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal-dialog" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<h5 class="modal-title" id="exampleModalLabel">Войти</h5>
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="modal-body">
+<p>Зарегистрированные пользователи:</p>
+<form method="POST" action="{{ url_for('sign_in') }}">
+<fieldset>
+<div class="form-group">
+{{ reader_signin_form.csrf_token }}
+{{ render_field(reader_signin_form.readers,placeholder=reader_signin_form.readers.label.text) }}
+</div>
+<button style="cursor:pointer" type="submit" class="btn btn-primary">Подтвердить</button>
+</fieldset>
+</form>
+</div>        
+</div>
+</div>
+</div>
+{% endblock %}
+
+{% block footer %}
+<footer id="footer">
+<div class="row">
+<div class="col-lg-12">
+<p>Построено с помощью <a href="https://bootswatch.com/cyborg/" target="_blank">Bootstrap Cyborg</a></p>
+</div>
+</div>
+</footer>
+{% endblock %}
