@@ -7,6 +7,7 @@ from importlib import reload
 from datetime import timedelta
 import forms
 
+
 @app.before_request
 def before_request():
 	# перезагрузка форм 
@@ -14,24 +15,25 @@ def before_request():
 	# ReaderSigninForm 
 	reload(forms)
 
+
 @app.before_request
 def make_session_permanent():
 	'''сброс неактивной сессии'''
-	
 	session.permanent = True
 	app.permanent_session_lifetime = timedelta(minutes=40)
 
 
 def redirect_url(default='books'):
 	'''редирект на последнюю страницу'''
-
 	return request.args.get('next') or \
            request.referrer or \
            url_for(default)
 
+
 @login_manager.user_loader
 def load_user(user_id):
 	return Reader.query.get(int(user_id))
+
 
 @app.route('/sign_in', methods=['POST'])
 def sign_in():
@@ -68,14 +70,14 @@ def sign_up():
 
 			flash('Пароли не совпадают', category="text-danger")
 			return render_template('sign_up.html', reader_signin_form=reader_signin_form,
-													reader_signup_form=reader_signup_form)
+		                                           reader_signup_form=reader_signup_form)
 
 		flash('Такое имя уже существует', category="text-danger")
 		return render_template('sign_up.html', reader_signin_form=reader_signin_form,
-												reader_signup_form=reader_signup_form)
+		                                       reader_signup_form=reader_signup_form)
 
 	return render_template('sign_up.html', reader_signin_form=reader_signin_form,
-											reader_signup_form=reader_signup_form)
+	                                       reader_signup_form=reader_signup_form)
 
 @login_required
 @app.route('/logout')
@@ -83,7 +85,9 @@ def logout():
 	logout_user()
 	flash('Вы вышли из системы', category="text-success")
 	return redirect(redirect_url())
+
 #----------------------------------------------------------------------------------------------------------------------
+
 @app.route('/')
 def books():
 	""" список книг """
@@ -93,9 +97,10 @@ def books():
 	book_name_form = forms.BookNameForm()
 
 	return render_template('books.html', reader_signin_form=reader_signin_form,
-											search_form=search_form,
-											books=books,
-											book_name_form=book_name_form)
+	                                     search_form=search_form,
+										 books=books,
+										 book_name_form=book_name_form)
+
 
 @app.route('/add_book', methods=['POST'])
 def add_book():
@@ -121,6 +126,7 @@ def add_book():
 	flash('Введите название', category="text-danger")
 	return redirect(url_for('books'))
 
+
 @app.route('/edit_book/<int:book_id>',methods=['POST'])
 def edit_book(book_id):
 	""" изменить название книги """
@@ -139,11 +145,13 @@ def edit_book(book_id):
 			flash('Успех', category="text-success")
 			return redirect(redirect_url())
 
-		flash('Такая книга уже существует или введённое название идентично старому', category="text-danger")
+		flash('Такая книга уже существует или введённое название идентично старому', 
+			category="text-danger")
 		return redirect(redirect_url())
 
 	flash('Введите новое название', category="text-danger")
 	return redirect(redirect_url())
+
 
 @app.route('/delete_book/<int:book_id>')
 def delete_book(book_id):
@@ -154,7 +162,9 @@ def delete_book(book_id):
 
 	flash('Успех', category="text-success")
 	return redirect(url_for('books'))
+
 #----------------------------------------------------------------------------------------------------------------------
+
 @app.route('/authors')
 def authors():
 	""" список авторов """
@@ -169,6 +179,7 @@ def authors():
 											author_name_form=author_name_form,
 											author_book_form=author_book_form)
 
+
 @app.route('/add_author', methods=['POST'])
 def add_author():
 	""" добавить автора """
@@ -177,7 +188,8 @@ def add_author():
 	# наличие заполненной формы
 	if author_name_form.name.data:
 		# проверка имени на уникальность
-		author_name = Author.query.filter_by(author_name=author_name_form.name.data).first()
+		author_name = Author.query.filter_by(
+			author_name=author_name_form.name.data).first()
 		if not author_name:
 			# создание нового автора
 			new_author = Author(author_name=author_name_form.name.data)
@@ -193,6 +205,7 @@ def add_author():
 	flash('Введите новое имя', category="text-danger")
 	return redirect(url_for('authors'))
 
+
 @app.route('/edit_author/<int:author_id>', methods=['POST'])
 def edit_author(author_id):
 	""" изменить имя автора """
@@ -202,7 +215,8 @@ def edit_author(author_id):
 	# наличие заполненной формы
 	if author_name_form.name.data:
 		# проверка имени на уникальность
-		new_author_name = Author.query.filter_by(author_name=author_name_form.name.data).first()
+		new_author_name = Author.query.filter_by(
+			author_name=author_name_form.name.data).first()
 		if not new_author_name:
 			# изменение имени автора
 			author.author_name = author_name_form.name.data
@@ -211,11 +225,13 @@ def edit_author(author_id):
 			flash('Успех', category="text-success")
 			return redirect(redirect_url())
 
-		flash('Такой автор уже существует или введённое имя идентично старому', category="text-danger")
+		flash('Такой автор уже существует или введённое имя идентично старому', 
+			category="text-danger")
 		return redirect(redirect_url())
 
 	flash('Введите новое имя', category="text-danger")
 	return redirect(redirect_url())
+
 
 @app.route('/add_books_to_author/<int:author_id>', methods=['POST'])
 def add_books_to_author(author_id):
@@ -246,7 +262,9 @@ def delete_author(author_id):
 
 	flash('Успех', category="text-success")
 	return redirect(url_for('authors'))
+
 #----------------------------------------------------------------------------------------------------------------------
+
 @app.route('/search_book', methods=['POST'])
 def search_book():
 	""" поиск книг """
@@ -263,6 +281,7 @@ def search_book():
 			return redirect(redirect_url())
 		
 	return redirect(redirect_url())
+
 
 @app.route('/search_author', methods=['POST'])
 def search_author():
@@ -281,6 +300,7 @@ def search_author():
 		
 	return redirect(redirect_url())
 
+
 @app.route('/search_result_book/<int:id>')
 def search_result_book(id):
 	""" результат поиска книг"""
@@ -292,6 +312,7 @@ def search_result_book(id):
 													search_form=search_form,
 													book=book,
 													book_name_form=book_name_form)
+
 
 @app.route('/search_result_author/<int:id>')
 def search_result_author(id):
