@@ -18,7 +18,7 @@ class Author(db.Model):
 	author_id = db.Column(db.Integer, primary_key=True)
 	author_name = db.Column(db.String(100), unique=True)
 	writers = db.relationship('Book', secondary=many,
-							backref=db.backref('writers', lazy='dynamic'))
+				backref=db.backref('writers', lazy='dynamic'))
 
 class Book(db.Model):
 	""" книга """
