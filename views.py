@@ -98,8 +98,8 @@ def books():
 
 	return render_template('books.html', reader_signin_form=reader_signin_form,
 	                                     search_form=search_form,
-										 books=books,
-										 book_name_form=book_name_form)
+					     books=books,
+			       		     book_name_form=book_name_form)
 
 
 @app.route('/add_book', methods=['POST'])
@@ -174,10 +174,10 @@ def authors():
 	author_name_form = forms.AuthorNameForm()
 	author_book_form = forms.AuthorBooksForm()
 	return render_template('authors.html', reader_signin_form=reader_signin_form,
-											search_form=search_form,
-											authors=authors,
-											author_name_form=author_name_form,
-											author_book_form=author_book_form)
+						search_form=search_form,
+						authors=authors,
+						author_name_form=author_name_form,
+						author_book_form=author_book_form)
 
 
 @app.route('/add_author', methods=['POST'])
@@ -309,9 +309,9 @@ def search_result_book(id):
 	book_name_form = forms.BookNameForm()
 	book = Book.query.filter_by(book_id=id).first()
 	return render_template('search_result.html', reader_signin_form=reader_signin_form,
-													search_form=search_form,
-													book=book,
-													book_name_form=book_name_form)
+							search_form=search_form,
+							book=book,
+							book_name_form=book_name_form)
 
 
 @app.route('/search_result_author/<int:id>')
@@ -323,7 +323,7 @@ def search_result_author(id):
 	author_book_form = forms.AuthorBooksForm()
 	author = Author.query.filter_by(author_id=id).first()
 	return render_template('search_result.html', reader_signin_form=reader_signin_form,
-													search_form=search_form,
-													author=author,
-													author_name_form=author_name_form,
-													author_book_form=author_book_form)
+							search_form=search_form,
+							author=author,
+							author_name_form=author_name_form,
+							author_book_form=author_book_form)
